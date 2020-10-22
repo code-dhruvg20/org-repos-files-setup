@@ -1,0 +1,15 @@
+# folders
+.git/
+.github/
+node_modules/
+
+# files
+data/*.*
+.editorconfig
+.env.example
+.dockerignore
+.gitignore
+Dockerfile
+
+# wildcards
+*.csv

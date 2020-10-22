@@ -1,0 +1,12 @@
+name: pr_review_process
+source: repo_config
+integration:
+  sequential: true
+  reviewers:
+  - dhruv-icloud  
+  - team/architects
+master:
+  sequential: true
+  reviewers:
+  - team/architects
+  - team/tech-leads

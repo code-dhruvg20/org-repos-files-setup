@@ -1,0 +1,16 @@
+{
+  "name": "org_setup",
+  "version": "1.0.0",
+  "description": "Sets up the Repository with GitHub Logic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^18.0.6",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^8.2.0"
+  }
+}
