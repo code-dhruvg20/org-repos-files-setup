@@ -1,3 +1,0 @@
-file_path,github_path
-./data/pr-process.yml,.github/workflows/pr-process.yml
-./data/pr_config.yml,.github/pr_config.yml
