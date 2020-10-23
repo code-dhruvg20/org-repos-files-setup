@@ -29,9 +29,17 @@ Run the below commands from within this folder.
 ```sh
 node index.js
 ```
-`.env`
+#### `.env`
+![env image](imgs/env.png)
 
+#### `file2github.csv`
+![file2github image](imgs/file2github.png)
 
+#### `repo_list.csv`
+![repo_list image](imgs/repo_list.png)
+
+#### run_example 
+![run_example image](imgs/run_example.png)
 
 ### Example Run:
 
