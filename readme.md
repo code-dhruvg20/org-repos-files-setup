@@ -6,10 +6,12 @@
 - Delete files across a large set of repositories.
 - Honor or Bypass the Branch Protection logic.
 
-## Usage
+## Setup
 
-Copy the `.env.example` to `.env` and fill in the vaules for
+1. Copy the `repo_list.csv_example` to `repo_list.csv` and fill the repository data.
+2. Copy the `file2github.csv_example` to `file2github.csv` and fill the file details to be added.
 
+3. Copy the `.env.example` to `.env` and fill in the vaules for:
 - `GITHUB_TOKEN`: A GitHub Personal Access token with Full Private `repo` scope
 - `GITHUB_ORGANIZATION`: The name of the organization you want to read the data for.
 - `REPO_LIST_FILE`: CSV formatted List of Repositories. Example: [repo_list.csv](./repo_list.csv_example) 
@@ -27,6 +29,7 @@ Install [Node.js](https://nodejs.org/en/download/) v12.16.3 or above.
 Run the below commands from within this folder.
 
 ```sh
+npm install
 node index.js
 ```
 
