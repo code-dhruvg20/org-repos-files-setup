@@ -1,3 +1,7 @@
 file_path,github_path
 <local_file_location_1>,<github_file_location_1>
 <local_file_location_2>,<github_file_location_2>
+
+file_path,github_path
+./files/dummy-1.yml,files/dummy-1.yml
+./files/dummy-2.yml,files/dummy-2.yml
