@@ -73,6 +73,6 @@ This repository is maintained by:
 
 | | |
 |:---:|:---:|
-| [<img src="https://github.com/dhruvg20.png" width="40">](https://github.com/dhruvg20) | [@dhruvg20](https://github.com/pattacini) |
+| [<img src="https://github.com/dhruvg20.png" width="40">](https://github.com/dhruvg20) | [@dhruvg20](https://github.com/dhruvg20) |
 
 Please share your feedbacks and inputs.
