@@ -1,6 +1,6 @@
 # @github - Add Files to many Repositories on your Org
 
-## Description
+## ℹ Description
 
 - Setup GitHub multiple files on a large set of Repositories under your Organization, and want to prevent manual errors and need to be careful while adding the files at the right location in your GitHub Repositories.
 - Delete files across a large set of repositories.
@@ -68,3 +68,11 @@ In `.env`:
 - octokit.repos.listBranches
 - octokit.repos.deleteFile
 
+## 👨🏻‍💻 Maintainers
+This repository is maintained by:
+
+| | |
+|:---:|:---:|
+| [<img src="https://github.com/dhruvg20.png" width="40">](https://github.com/dhruvg20) | [@dhruvg20](https://github.com/pattacini) |
+
+Please share your feedbacks and inputs.
