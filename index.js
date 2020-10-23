@@ -24,7 +24,7 @@ if (process.env.DEBUG_MODE == "true") {
 }
 
 GLOBALS._debug = false;
-GLOBALS._delete = false;
+GLOBALS._delete = true;
 
 if (process.env.GITHUB_BRANCH_PROTECTION_OVERRIDE == "true") {
   GLOBALS.branchProtectionOverride = true;

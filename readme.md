@@ -8,24 +8,21 @@ Copy the `.env.example` to `.env` and fill in the vaules for
 
 - `GITHUB_TOKEN`: A GitHub Personal Access token with Full Private `repo` scope
 - `GITHUB_ORGANIZATION`: The name of the organization you want to read the data for.
-- `REPO_LIST_FILE`: repo_list.csv
-- `GITHUB_ACTION_PATH`: .github/workflows/pr-process.yml
-- `ACTION_PATH`: ./data/pr-process.yml
-- `GITHUB_CONFIG_PATH`:.github/pr_config.yml
-- `CONFIG_PATH`: ./data/pr_config.yml
-- `GITHUB_BRANCH`: ["master", "integration"]
-- `GITHUB_BRANCH_PROTECTION_OVERRIDE`: true
+- `REPO_LIST_FILE`: CSV formatted List of Repositories. Example:  
+- `FILE_LIST_CSV`: CSV formatted List of Local Files and their target GitHub locations. Example:  
+- `GITHUB_BRANCH`: ["master", "integration"]. Array list of branch names you want to push the files to.  
+- `GITHUB_BRANCH_PROTECTION_OVERRIDE`: true or false. Do you want to add the files even if there is a branch protection or not. 
+- `GIT_NAME`= Name of the Author who wants to make the commit. 
+- `GIT_EMAIL`= Email of the Author who wants to make the commit. 
 
-Generated `*.csv` files will be stored under `./data`.
 
 ### Run it locally
 
 Run the below commands from within this folder.
 
 ```sh
-npm install
+node index.js
 
-npm start
 ```
 
 ### Run it with :whale: Docker
@@ -54,28 +51,7 @@ docker run \
   -it github/get-repos-in-org-and-size
 ```
 
-## Run it with :whale: Docker against github.com from [GPR](https://github.com/github/services-toolbox/packages/10802)
-
-```sh
-docker run \
-  -e GITHUB_TOKEN=my-token \
-  -e GITHUB_ORGANIZATION=my-org \
-  -v "$(pwd)/data":/get-repos-in-org-and-size/data \
-  -it docker.pkg.github.com/github/services-toolbox/get-repos-in-org-and-size:1.0.2
-```
-
-## Run it with :whale: Docker against GitHub Enterprise Server (e.g. github.example.com) from [GPR](https://github.com/github/services-toolbox/packages/10802)
-
-```sh
-docker run \
-  -e GITHUB_API_URL=https://github.example.com/api/graphql \
-  -e GITHUB_TOKEN=my-token \
-  -e GITHUB_ORGANIZATION=my-org \
-  -v "$(pwd)/data":/get-repos-in-org-and-size/data \
-  -it docker.pkg.github.com/github/services-toolbox/get-repos-in-org-and-size:1.0.2
-```
-
-### octokit.github.io API Calls in the Code
+### [octokit.github.io](https://octokit.github.io/rest.js/v18) API Calls in the Code
 
 - octokit.repos.get
 - octokit.git.createRef
