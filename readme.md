@@ -22,34 +22,15 @@ Run the below commands from within this folder.
 
 ```sh
 node index.js
-
 ```
 
-### Run it with :whale: Docker
+### Example Run:
 
-Run the below commands from within this folder.
 
-```sh
-docker build \
-  --no-cache=true \
-  -t github/get-repos-in-org-and-size .
-
-docker run \
-  -v "$(pwd)/data":/get-repos-in-org-and-size/data \
-  -it github/get-repos-in-org-and-size
-```
-
-If you want, you can provide the variables (e.g. `GITHUB_ORGANIZATION`) also at runtime:
-
-Example:
-
-```sh
-docker run \
-  -e GITHUB_TOKEN=my-token \
-  -e GITHUB_ORGANIZATION=my-org \
-  -v "$(pwd)/data":/get-repos-in-org-and-size/data \
-  -it github/get-repos-in-org-and-size
-```
+### Troubleshooting 
+In `.env`:
+- Pass `DEBUG_MODE`=true. All the debug logs will be printed on the screen. 
+- Pass `DEL_FILES`=true. Delete all the files added to the Repositories.
 
 ### [octokit.github.io](https://octokit.github.io/rest.js/v18) API Calls in the Code
 

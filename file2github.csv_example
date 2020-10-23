@@ -1,3 +1,9 @@
 file_path,github_path
 <local_file_location_1>,<github_file_location_1>
 <local_file_location_2>,<github_file_location_2>
+
+
+
+file_path,github_path
+./files/pr-process.yml,.github/workflows/pr-process.yml
+./files/pr_config.yml,.github/pr_config.yml
