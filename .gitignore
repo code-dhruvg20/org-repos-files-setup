@@ -7,7 +7,7 @@
 
 
 ### Project Specific ###
-.csv
+*.csv
 pr_config.yml
 pr-process.yml
 
