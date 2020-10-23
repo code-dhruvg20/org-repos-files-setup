@@ -16,15 +16,15 @@ branch_arr = JSON.parse(process.env.GITHUB_BRANCH);
 var dateTime = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0];
 var GLOBALS = {};
 
+GLOBALS._debug = false;
+GLOBALS._delete = false;
+
 if (process.env.DEL_FILES == "true") {
   GLOBALS._delete = true;
 }
 if (process.env.DEBUG_MODE == "true") {
   GLOBALS._debug = true;
 }
-
-GLOBALS._debug = false;
-GLOBALS._delete = false;
 
 if (process.env.GITHUB_BRANCH_PROTECTION_OVERRIDE == "true") {
   GLOBALS.branchProtectionOverride = true;
