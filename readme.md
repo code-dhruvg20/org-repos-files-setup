@@ -29,6 +29,13 @@ Run the below commands from within this folder.
 ```sh
 node index.js
 ```
+
+### Example Run:
+
+```sh
+node index.js
+```
+
 #### `.env`
 ![env image](imgs/env.png)
 
@@ -40,12 +47,6 @@ node index.js
 
 #### run_example 
 ![run_example image](imgs/run_example.png)
-
-### Example Run:
-
-```sh
-node index.js
-```
 
 ### Troubleshooting 
 In `.env`:
