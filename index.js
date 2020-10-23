@@ -1,19 +1,29 @@
 
+var fs, repoJson, fileJson, branch_arr, gitHubFileListStr;
+
 require('dotenv').config();
 const { Octokit } = require("@octokit/rest");
 const csvtojsonV2 = require("csvtojson");
-var fs = require('fs');
+fs = require('fs');
 
-const csvFilePath = process.env.REPO_LIST_FILE;
+const repoListCsv = process.env.REPO_LIST_CSV;
+const fileListCsv = process.env.FILE_LIST_CSV;
 
 console.log(process.env.GITHUB_BRANCH);
-var branch_arr = JSON.parse(process.env.GITHUB_BRANCH);
+branch_arr = JSON.parse(process.env.GITHUB_BRANCH);
 //branch_arr = ["integration"];
 
 var dateTime = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0];
 var GLOBALS = {};
-GLOBALS.debug = true;
-GLOBALS.debug = false;
+
+if (process.env.DEL_FILES == "true") {
+  GLOBALS._delete = true;
+}
+if (process.env.DEBUG_MODE == "true") {
+  GLOBALS._debug = true;
+}
+
+GLOBALS._debug = false;
 GLOBALS._delete = false;
 
 if (process.env.GITHUB_BRANCH_PROTECTION_OVERRIDE == "true") {
@@ -22,15 +32,13 @@ if (process.env.GITHUB_BRANCH_PROTECTION_OVERRIDE == "true") {
   GLOBALS.branchProtectionOverride = false;
 }
 
-console.log(process.env.GITHUB_TOKEN);
-
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
 async function repoSetup(repoName, branchName) {
 
-  var resp, branchProtectionData, default_branch, repoBranchData, sha, failureFlag;
+  var resp, branchProtectionData, default_branch, repoBranchData, sha, failureFlag, filePath, githubPath;
 
   repoBranchData = GLOBALS.repoBranch.data;
 
@@ -47,14 +55,14 @@ async function repoSetup(repoName, branchName) {
   }
 
   default_branch = resp.data.default_branch;
-  GLOBALS.debug == true ? console.log(default_branch) : null;
+  GLOBALS._debug == true ? console.log(default_branch) : null;
 
   var branchList = repoBranchData;
   var branch_data = branchList.filter(elem => elem.name == branchName)[0];
   var defaultBranch = branchList.filter(elem => elem.name == default_branch)[0];
 
-  GLOBALS.debug == true ? console.log(branch_data) : null;
-  GLOBALS.debug == true ? console.log(defaultBranch) : null;
+  GLOBALS._debug == true ? console.log(branch_data) : null;
+  GLOBALS._debug == true ? console.log(defaultBranch) : null;
 
 
   //console.log(defaultBranch);
@@ -66,11 +74,11 @@ async function repoSetup(repoName, branchName) {
         ref: "refs/heads/" + branchName,
         sha: defaultBranch.commit.sha,
       });
-      GLOBALS.debug == true ? console.log(resp) : null;
+      GLOBALS._debug == true ? console.log(resp) : null;
       branch_data = {};
       branch_data.protected = false;
     }
-    GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} createRef: SUCCESSFULL`) : null;
+    GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} createRef: SUCCESSFULL`) : null;
   } catch (e) {
     failureFlag = true;
     console.log(`${repoName} : ${branchName} : createRef: failed`);
@@ -86,9 +94,9 @@ async function repoSetup(repoName, branchName) {
         repo: repoName,
         branch: branchName,
       });
-      GLOBALS.debug == true ? console.log(resp) : null;
+      GLOBALS._debug == true ? console.log(resp) : null;
       branchProtectionData = resp.data;
-      GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} : getBranchProtection: SUCCESSFULL`) : null;
+      GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} : getBranchProtection: SUCCESSFULL`) : null;
     } catch (e) {
       failureFlag = true;
       console.log(` ${repoName} : ${branchName} : getBranchProtection: FAILED`);
@@ -102,8 +110,8 @@ async function repoSetup(repoName, branchName) {
         repo: repoName,
         branch: branchName,
       });
-      GLOBALS.debug == true ? console.log(resp) : null;
-      GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} : deleteBranchProtection: SUCCESSFULL`) : null;
+      GLOBALS._debug == true ? console.log(resp) : null;
+      GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} : deleteBranchProtection: SUCCESSFULL`) : null;
     } catch (e) {
       failureFlag = true;
       console.log(`${repoName} : ${branchName} deleteBranchProtection: FAILED`);
@@ -113,42 +121,30 @@ async function repoSetup(repoName, branchName) {
 
   if (branch_data.protected == false || (GLOBALS.branchProtectionOverride == true && branch_data.protected == true)) {
 
-    try {
-      resp = await octokit.repos.getContent({
-        owner: process.env.GITHUB_ORGANIZATION,
-        repo: repoName,
-        path: process.env.GITHUB_CONFIG_PATH,
-        ref: branchName
-      });
-      sha = resp.data.sha;
-      GLOBALS.debug == true ? console.log(resp) : null;
-      GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} : getContent: File Exists : ${process.env.GITHUB_CONFIG_PATH}`) : null;
-    } catch (e) {
-      //failureFlag = true;
-      sha = null;
-      console.log(`${repoName} : ${branchName} : getContent: File Does Not Exist : ${process.env.GITHUB_CONFIG_PATH}`);
-      //console.log('Error:', e.stack);
-    }
 
-    resp = await addDelFile2Repo(repoName, process.env.GITHUB_CONFIG_PATH, branchName, GLOBALS.prContent, sha);
-    try {
-      resp = await octokit.repos.getContent({
-        owner: process.env.GITHUB_ORGANIZATION,
-        repo: repoName,
-        path: process.env.GITHUB_ACTION_PATH,
-        ref: branchName
-      });
-      sha = resp.data.sha;
-      GLOBALS.debug == true ? console.log(resp) : null;
-      GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} : getContent: File Exists : ${process.env.GITHUB_ACTION_PATH}`) : null;
-    } catch (e) {
-      //failureFlag = true;
-      sha = null;
-      console.log(`${repoName} : ${branchName} : getContent: File Does Not Exist : ${process.env.GITHUB_ACTION_PATH}`);
-      //console.log('Error:', e.stack);
-    }
+    for(var i = 0;i<fileJson.length;i++){
+      githubPath = fileJson[i].github_path;
+      fileContent = fileJson[i].file_content;
+      try {
+        resp = await octokit.repos.getContent({
+          owner: process.env.GITHUB_ORGANIZATION,
+          repo: repoName,
+          path: githubPath,
+          ref: branchName
+        });
+        sha = resp.data.sha;
+        GLOBALS._debug == true ? console.log(resp) : null;
+        GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} : getContent: File Exists : ${githubPath}`) : null;
+      } catch (e) {
+        //failureFlag = true;
+        sha = null;
+        GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} : getContent: File Does Not Exist : ${githubPath}`): null;
+        //console.log('Error:', e.stack);
+      }
+  
+      resp = await addDelFile2Repo(repoName, githubPath, branchName, fileContent, sha);
 
-    resp = await addDelFile2Repo(repoName, process.env.GITHUB_ACTION_PATH, branchName, GLOBALS.actionContent, sha);
+    }
 
   }
 
@@ -166,8 +162,8 @@ async function repoSetup(repoName, branchName) {
         allow_force_pushes: branchProtectionData.allow_force_pushes == undefined ? null : branchProtectionData.allow_force_pushes.enabled,
         allow_deletions: branchProtectionData.allow_deletions == undefined ? null : branchProtectionData.allow_deletions.enabled
       })
-      GLOBALS.debug == true ? console.log(resp) : null;
-      GLOBALS.debug == true ? console.log(`\n updateBranchProtection: successfull : repoName : ${repoName} : branchName : ${branchName}`) : null;
+      GLOBALS._debug == true ? console.log(resp) : null;
+      GLOBALS._debug == true ? console.log(`\n updateBranchProtection: successfull : repoName : ${repoName} : branchName : ${branchName}`) : null;
     } catch (e) {
       failureFlag = true;
       console.log(`\n updateBranchProtection: failed : repoName : ${repoName} : branchName : ${branchName}`);
@@ -180,12 +176,12 @@ async function repoSetup(repoName, branchName) {
   }
 
   if (failureFlag == true) {
-    console.log(`${repoName} : ${branchName} : END : CHECK : Check Repository's - Action file "${process.env.GITHUB_ACTION_PATH}", Config file "${process.env.GITHUB_CONFIG_PATH}", and Branch Protection`);
+    console.log(`${repoName} : ${branchName} : END : CHECK : Check Repository's - Branch Protection and${gitHubFileListStr}`);
   } else {
-    if(GLOBALS._delete == true){
-    console.log(`${repoName} : ${branchName} : END : SUCCESSFULL - Deleted Repository's - Action file "${process.env.GITHUB_ACTION_PATH}" and Config file "${process.env.GITHUB_CONFIG_PATH}`);
-    }else{
-      console.log(`${repoName} : ${branchName} : END : SUCCESSFULL - Added Repository's - Action file "${process.env.GITHUB_ACTION_PATH}" and Config file "${process.env.GITHUB_CONFIG_PATH}`);
+    if (GLOBALS._delete == true) {
+      console.log(`${repoName} : ${branchName} : END : SUCCESSFULL - Deleted Repository's - Files -${gitHubFileListStr}`);
+    } else {
+      console.log(`${repoName} : ${branchName} : END : SUCCESSFULL - Added Repository's - Files -${gitHubFileListStr}`);
     }
   }
 
@@ -209,8 +205,8 @@ async function addDelFile2Repo(repoName, filePath, branchName, content, sha) {
         "author.name": process.env.GIT_NAME,
         "author.email": process.env.GIT_EMAIL
       })
-      GLOBALS.debug == true ? console.log(resp) : null;
-      GLOBALS.debug == true ? console.log(`${repoName} : ${branchName} : createOrUpdateFileContents: SUCCESSFULL`) : null;
+      GLOBALS._debug == true ? console.log(resp) : null;
+      GLOBALS._debug == true ? console.log(`${repoName} : ${branchName} : createOrUpdateFileContents: SUCCESSFULL`) : null;
     }
 
 
@@ -239,13 +235,18 @@ async function addDelFile2Repo(repoName, filePath, branchName, content, sha) {
 function readFileContent() {
 
   try {
-    GLOBALS.actionContent = fs.readFileSync(process.env.ACTION_PATH, 'utf8');
-    GLOBALS.actionContent = GLOBALS.actionContent.replace("{ORG_NAME}", process.env.GITHUB_ORGANIZATION);
-    GLOBALS.debug == true ? console.log(GLOBALS.actionContent) : null;
-
-    GLOBALS.prContent = fs.readFileSync(process.env.CONFIG_PATH, 'utf8');
-    GLOBALS.debug == true ? console.log(GLOBALS.prContent) : null;
-
+    var fileContent, obj;
+    gitHubFileListStr = "";
+    for(var i = 0;i<fileJson.length;i++){
+      obj = fileJson[i];
+      gitHubFileListStr += ` "${obj.github_path}",`
+      file_path = obj.file_path;
+      fileContent = fs.readFileSync(file_path, 'utf8');
+      fileContent = fileContent.replace("{ORG_NAME}", process.env.GITHUB_ORGANIZATION);
+      obj.file_content = fileContent;
+      GLOBALS._debug == true ? console.log(GLOBALS.actionContent) : null;
+    }
+    gitHubFileListStr= gitHubFileListStr.slice(0,-1);
   } catch (e) {
     console.log('Error:', e.stack);
   }
@@ -257,8 +258,8 @@ async function getBranchList(repoName) {
       owner: process.env.GITHUB_ORGANIZATION,
       repo: repoName,
     });
-    GLOBALS.debug == true ? console.log(GLOBALS.repoBranch) : null;
-    GLOBALS.debug == true ? console.log(`${repoName} : listBranches: SUCCESSFULL`) : null;
+    GLOBALS._debug == true ? console.log(GLOBALS.repoBranch) : null;
+    GLOBALS._debug == true ? console.log(`${repoName} : listBranches: SUCCESSFULL`) : null;
   } catch (e) {
     console.log(`${repoName} : listBranches: FAILED`);
     console.log('Error:', e.stack);
@@ -267,13 +268,15 @@ async function getBranchList(repoName) {
 
 (async () => {
 
-  const jsonArray = await csvtojsonV2().fromFile(csvFilePath);
-
-  console.log(jsonArray);
-
+  repoJson = await csvtojsonV2().fromFile(repoListCsv);
+  fileJson = await csvtojsonV2().fromFile(fileListCsv);
+  console.log("Repository List:");
+  console.log(repoJson);
+  console.log("Files List:");
+  console.log(fileJson);
   readFileContent();
 
-  jsonArray.forEach(
+  repoJson.forEach(
     async function (element) {
       await getBranchList(element.repo_name);
       branch_arr.forEach(elem => repoSetup(element.repo_name, elem));
