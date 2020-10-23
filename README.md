@@ -16,7 +16,7 @@
 - `GITHUB_ORGANIZATION`: The name of the organization you want to read the data for.
 - `REPO_LIST_FILE`: CSV formatted List of Repositories. Example: [repo_list.csv](./repo_list.csv_example) 
 - `FILE_LIST_CSV`: CSV formatted List of Local Files and their target GitHub locations. Example: [file2github.csv](./file2github.csv_example) 
-- `GITHUB_BRANCH`: ["master", "integration"]. Array list of branch names you want to push the files to.  
+- `GITHUB_BRANCH`: ["main", "integration"]. Array list of branch names you want to push the files to.  
 - `GITHUB_BRANCH_PROTECTION_OVERRIDE`: true or false. Do you want to add the files even if there is a branch protection or not. 
 - `GIT_NAME`= Name of the Author who wants to make the commit. 
 - `GIT_EMAIL`= Email of the Author who wants to make the commit. 
