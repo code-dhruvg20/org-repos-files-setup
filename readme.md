@@ -1,6 +1,10 @@
-# @github/org-setup
+# @github - Add Files to many Repositories on your Org
 
 ## Description
+
+- Setup GitHub multiple files on a large set of Repositories under your Organization, and want to prevent manual errors and need to be careful while adding the files at the right location in your GitHub Repositories.
+- Delete files across a large set of repositories.
+- Honor or Bypass the Branch Protection logic.
 
 ## Usage
 
@@ -14,7 +18,6 @@ Copy the `.env.example` to `.env` and fill in the vaules for
 - `GITHUB_BRANCH_PROTECTION_OVERRIDE`: true or false. Do you want to add the files even if there is a branch protection or not. 
 - `GIT_NAME`= Name of the Author who wants to make the commit. 
 - `GIT_EMAIL`= Email of the Author who wants to make the commit. 
-
 
 ### Run it locally
 
