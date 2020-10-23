@@ -1,5 +1,5 @@
 {
-  "name": "org_file_setup",
+  "name": "org_repos_files_setup",
   "version": "1.0.0",
   "description": "Sets up the Repository with GitHub Logic",
   "main": "index.js",
