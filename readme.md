@@ -18,6 +18,7 @@ Copy the `.env.example` to `.env` and fill in the vaules for
 - `GITHUB_BRANCH_PROTECTION_OVERRIDE`: true or false. Do you want to add the files even if there is a branch protection or not. 
 - `GIT_NAME`= Name of the Author who wants to make the commit. 
 - `GIT_EMAIL`= Email of the Author who wants to make the commit. 
+- `DEL_FILES`=true. Delete all the files from the Repositories.
 
 ### Run it locally
 
@@ -33,7 +34,7 @@ node index.js
 ### Troubleshooting 
 In `.env`:
 - Pass `DEBUG_MODE`=true. All the debug logs will be printed on the screen. 
-- Pass `DEL_FILES`=true. Delete all the files added to the Repositories.
+
 
 ### [octokit.github.io](https://octokit.github.io/rest.js/v18) API Calls in the Code
 
