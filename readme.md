@@ -22,14 +22,22 @@ Copy the `.env.example` to `.env` and fill in the vaules for
 
 ### Run it locally
 
+Install [Node.js](https://nodejs.org/en/download/) v12.16.3 or above. 
+
 Run the below commands from within this folder.
 
 ```sh
 node index.js
 ```
+`.env`
+
+
 
 ### Example Run:
 
+```sh
+node index.js
+```
 
 ### Troubleshooting 
 In `.env`:
